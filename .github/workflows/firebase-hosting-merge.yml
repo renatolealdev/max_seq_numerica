@@ -3,18 +3,24 @@
 
 name: Deploy to Firebase Hosting on merge
 'on':
-  push:
-    branches:
-      - master
+   push:
+      branches:
+         - master
 jobs:
-  build_and_deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - run: '## TODO'
-      - uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_MAX_SEQ_NUMERICA }}'
-          channelId: live
-          projectId: max-seq-numerica
+   build_and_deploy:
+      runs-on: ubuntu-latest
+      steps:
+         - uses: actions/checkout@v2
+         - uses: subosito/flutter-action@v1
+           with:
+              flutter-version: '2.0.5'
+         - run: flutter upgrade
+         - run: flutter pub get
+         - run: flutter test
+         - run: flutter build web
+         - uses: FirebaseExtended/action-hosting-deploy@v0
+           with:
+              repoToken: '${{ secrets.GITHUB_TOKEN }}'
+              firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_MAX_SEQ_NUMERICA }}'
+              channelId: live
+              projectId: max-seq-numerica
